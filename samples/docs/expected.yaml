@@ -1,0 +1,18 @@
+# Ground truth: how many of each sensitive info type SHOULD be detected per file
+# at the entity's recommended confidence. Anything not listed is expected to be 0.
+hr-onboarding-letter.txt:
+  canada_sin: 1
+  north_shield_employee_id: 1
+payroll-export.csv:
+  canada_sin: 2              # 046454287 fails Luhn and must NOT be counted
+  north_shield_employee_id: 3
+invoice-2026-114.txt:
+  payment_card: 1            # order number 4111111111111112 fails Luhn
+marketing-newsletter.txt: {} # phone numbers, a formatted number without SIN context, an order number
+patient-email.eml:
+  ontario_health_card: 1
+clinic-intake.docx:
+  ontario_health_card: 1
+  canada_sin: 1
+finance-q3.xlsx:
+  payment_card: 2

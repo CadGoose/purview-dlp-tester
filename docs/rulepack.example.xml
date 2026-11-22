@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RulePackage xmlns="http://schemas.microsoft.com/office/2011/mce">
+  <RulePack id="26b758c8-fbc1-5171-ad3e-afca27c7d6ee">
+    <Version major="1" minor="0" build="0" revision="0" />
+    <Publisher id="ba42861a-5688-5c2f-bea0-9a42348165a8" />
+    <Details defaultLangCode="en-us">
+      <LocalizedDetails langcode="en-us">
+        <PublisherName>George Mkahail</PublisherName>
+        <Name>Canada PII (custom)</Name>
+        <Description>Canadian SIN, Ontario health card, payment cards and an internal employee ID, tuned to reduce false positives.</Description>
+      </LocalizedDetails>
+    </Details>
+  </RulePack>
+  <Rules>
+    <Entity id="e79d9a99-fb88-5630-adb2-e99fbb3f8d3e" patternsProximity="300" recommendedConfidence="75">
+      <Pattern confidenceLevel="85">
+        <IdMatch idRef="Regex_sin_formatted" />
+        <Any minMatches="1">
+          <Match idRef="Keyword_sin_terms" />
+        </Any>
+      </Pattern>
+      <Pattern confidenceLevel="75">
+        <IdMatch idRef="Regex_sin_unformatted" />
+        <Any minMatches="1">
+          <Match idRef="Keyword_sin_terms" />
+        </Any>
+      </Pattern>
+      <Pattern confidenceLevel="65">
+        <IdMatch idRef="Regex_sin_formatted" />
+      </Pattern>
+    </Entity>
+    <Entity id="5b66f406-5ce2-5585-9e50-31b08dfb008a" patternsProximity="300" recommendedConfidence="85">
+      <Pattern confidenceLevel="85">
+        <IdMatch idRef="Regex_ohip" />
+        <Any minMatches="1">
+          <Match idRef="Keyword_ohip_terms" />
+        </Any>
+      </Pattern>
+    </Entity>
+    <Entity id="ff27bc67-854c-5c49-aa55-ddebfb349d5e" patternsProximity="300" recommendedConfidence="85">
+      <Pattern confidenceLevel="85">
+        <IdMatch idRef="Regex_card" />
+        <Any minMatches="1">
+          <Match idRef="Keyword_card_terms" />
+        </Any>
+      </Pattern>
+      <Pattern confidenceLevel="75">
+        <IdMatch idRef="Regex_card" />
+      </Pattern>
+    </Entity>
+    <Entity id="dab62a95-495c-5c34-b6da-dbe7b7a4dfd2" patternsProximity="300" recommendedConfidence="75">
+      <Pattern confidenceLevel="85">
+        <IdMatch idRef="Regex_employee_id" />
+        <Any minMatches="1">
+          <Match idRef="Keyword_hr_terms" />
+        </Any>
+      </Pattern>
+      <Pattern confidenceLevel="65">
+        <IdMatch idRef="Regex_employee_id" />
+      </Pattern>
+    </Entity>
+    <Regex id="Regex_card">\b(?:\d[ -]?){12,18}\d\b</Regex>
+    <Regex id="Regex_employee_id">\bNS-\d{6}\b</Regex>
+    <Regex id="Regex_ohip">\b\d{4}[- ]?\d{3}[- ]?\d{3}(?:[- ]?[A-Z]{2})?\b</Regex>
+    <Regex id="Regex_sin_formatted">\b\d{3}[- ]\d{3}[- ]\d{3}\b</Regex>
+    <Regex id="Regex_sin_unformatted">\b\d{9}\b</Regex>
+    <Keyword id="Keyword_card_terms">
+      <Group matchStyle="word">
+        <Term caseSensitive="false">credit card</Term>
+        <Term caseSensitive="false">card number</Term>
+        <Term caseSensitive="false">visa</Term>
+        <Term caseSensitive="false">mastercard</Term>
+        <Term caseSensitive="false">amex</Term>
+        <Term caseSensitive="false">american express</Term>
+        <Term caseSensitive="false">cc#</Term>
+        <Term caseSensitive="false">expiry</Term>
+        <Term caseSensitive="false">exp date</Term>
+        <Term caseSensitive="false">cvv</Term>
+      </Group>
+    </Keyword>
+    <Keyword id="Keyword_hr_terms">
+      <Group matchStyle="word">
+        <Term caseSensitive="false">employee</Term>
+        <Term caseSensitive="false">payroll</Term>
+        <Term caseSensitive="false">staff id</Term>
+        <Term caseSensitive="false">personnel</Term>
+        <Term caseSensitive="false">HR</Term>
+      </Group>
+    </Keyword>
+    <Keyword id="Keyword_ohip_terms">
+      <Group matchStyle="word">
+        <Term caseSensitive="false">OHIP</Term>
+        <Term caseSensitive="false">health card</Term>
+        <Term caseSensitive="false">health number</Term>
+        <Term caseSensitive="false">Ontario health</Term>
+        <Term caseSensitive="false">carte santé</Term>
+      </Group>
+    </Keyword>
+    <Keyword id="Keyword_sin_terms">
+      <Group matchStyle="word">
+        <Term caseSensitive="false">SIN</Term>
+        <Term caseSensitive="false">S.I.N.</Term>
+        <Term caseSensitive="false">social insurance</Term>
+        <Term caseSensitive="false">social insurance number</Term>
+        <Term caseSensitive="false">numéro d'assurance sociale</Term>
+        <Term caseSensitive="false">NAS</Term>
+      </Group>
+    </Keyword>
+    <LocalizedStrings>
+      <Resource idRef="e79d9a99-fb88-5630-adb2-e99fbb3f8d3e">
+        <Name default="true" langcode="en-us">Canada Social Insurance Number (strict)</Name>
+        <Description default="true" langcode="en-us">9-digit SIN with Luhn validation. Unformatted numbers need a nearby keyword.</Description>
+      </Resource>
+      <Resource idRef="5b66f406-5ce2-5585-9e50-31b08dfb008a">
+        <Name default="true" langcode="en-us">Ontario Health Card Number (OHIP)</Name>
+        <Description default="true" langcode="en-us">10-digit health number with optional 2-letter version code, Luhn-validated, keyword required.</Description>
+      </Resource>
+      <Resource idRef="ff27bc67-854c-5c49-aa55-ddebfb349d5e">
+        <Name default="true" langcode="en-us">Payment card number</Name>
+        <Description default="true" langcode="en-us">13-19 digit PAN with Luhn and known issuer prefixes (Visa, Mastercard, Amex, Discover).</Description>
+      </Resource>
+      <Resource idRef="dab62a95-495c-5c34-b6da-dbe7b7a4dfd2">
+        <Name default="true" langcode="en-us">Employee ID (NS-######)</Name>
+        <Description default="true" langcode="en-us">Example of an organisation-specific identifier; high confidence only next to HR terms.</Description>
+      </Resource>
+    </LocalizedStrings>
+  </Rules>
+</RulePackage>

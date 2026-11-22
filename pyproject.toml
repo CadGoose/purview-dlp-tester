@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "purview-dlp-tester"
+version = "1.0.0"
+description = "Test Microsoft Purview custom sensitive information types against sample documents before deploying DLP."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "George Mkahail" }]
+requires-python = ">=3.10"
+dependencies = ["PyYAML>=6.0"]
+keywords = ["purview", "dlp", "data-loss-prevention", "microsoft-365", "compliance", "pii"]
+
+[project.optional-dependencies]
+pdf = ["pypdf>=4"]
+dev = ["pytest>=8", "ruff>=0.5"]
+
+[project.scripts]
+dlp-tester = "dlptester.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

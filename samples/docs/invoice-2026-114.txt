@@ -1,0 +1,6 @@
+INVOICE 2026-114
+Bill to: Contoso Ltd.
+
+Paid by Visa ending 1111 (card number 4111 1111 1111 1111, exp 08/29).
+Order number: 4111111111111112
+Tracking: 1Z 999 AA1 01 2345 6784

@@ -1,0 +1,75 @@
+# Custom sensitive information types (SITs), modelled on Microsoft Purview's structure:
+#   entity -> patterns (one per confidence level) -> primary element + supporting elements.
+#
+# Regexes must stay Boost-compatible (no look-behind) so they export cleanly to Purview.
+
+rule_pack:
+  name: Canada PII (custom)
+  publisher: George Mkahail
+  description: Canadian SIN, Ontario health card, payment cards and an internal employee ID, tuned to reduce false positives.
+  proximity: 300            # characters either side of the primary match
+
+elements:
+  regex:
+    sin_formatted: '\b\d{3}[- ]\d{3}[- ]\d{3}\b'
+    sin_unformatted: '\b\d{9}\b'
+    ohip: '\b\d{4}[- ]?\d{3}[- ]?\d{3}(?:[- ]?[A-Z]{2})?\b'
+    card: '\b(?:\d[ -]?){12,18}\d\b'
+    employee_id: '\bNS-\d{6}\b'
+  keywords:
+    sin_terms: [SIN, S.I.N., social insurance, social insurance number, numéro d'assurance sociale, NAS]
+    ohip_terms: [OHIP, health card, health number, Ontario health, carte santé]
+    card_terms: [credit card, card number, visa, mastercard, amex, american express, cc#, expiry, exp date, cvv]
+    hr_terms: [employee, payroll, staff id, personnel, HR]
+
+entities:
+  - id: canada_sin
+    name: Canada Social Insurance Number (strict)
+    description: 9-digit SIN with Luhn validation. Unformatted numbers need a nearby keyword.
+    recommended_confidence: 75
+    patterns:
+      - confidence: 85
+        primary: sin_formatted
+        validators: [luhn]
+        require_any: [sin_terms]
+      - confidence: 75
+        primary: sin_unformatted
+        validators: [luhn]
+        require_any: [sin_terms]
+      - confidence: 65
+        primary: sin_formatted
+        validators: [luhn]
+
+  - id: ontario_health_card
+    name: Ontario Health Card Number (OHIP)
+    description: 10-digit health number with optional 2-letter version code, Luhn-validated, keyword required.
+    recommended_confidence: 85
+    patterns:
+      - confidence: 85
+        primary: ohip
+        validators: [luhn]
+        require_any: [ohip_terms]
+
+  - id: payment_card
+    name: Payment card number
+    description: 13-19 digit PAN with Luhn and known issuer prefixes (Visa, Mastercard, Amex, Discover).
+    recommended_confidence: 85
+    patterns:
+      - confidence: 85
+        primary: card
+        validators: [luhn, card_issuer]
+        require_any: [card_terms]
+      - confidence: 75
+        primary: card
+        validators: [luhn, card_issuer]
+
+  - id: north_shield_employee_id
+    name: Employee ID (NS-######)
+    description: Example of an organisation-specific identifier; high confidence only next to HR terms.
+    recommended_confidence: 75
+    patterns:
+      - confidence: 85
+        primary: employee_id
+        require_any: [hr_terms]
+      - confidence: 65
+        primary: employee_id

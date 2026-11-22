@@ -1,0 +1,7 @@
+From: patient.services@clinic.example
+To: frontdesk@clinic.example
+Subject: Updated health card
+Content-Type: text/plain; charset=utf-8
+
+Hi team, the patient's new Ontario health card number is 1234-567-897-AB.
+Please update the chart before Thursday's appointment.
